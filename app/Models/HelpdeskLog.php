@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'domain',
@@ -19,12 +21,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class HelpdeskLog extends Model
 {
+    use LogsActivity;
+
     protected $table = 'helpdesk_log';
 
     protected $primaryKey = 'helpdesk_log_id';
 
     const STATUS_DRAFT = 'Draft';
+
     const STATUS_DIPROSES = 'Diproses';
+
     const STATUS_SELESAI = 'Selesai';
 
     const STATUSES = [self::STATUS_DRAFT, self::STATUS_DIPROSES, self::STATUS_SELESAI];
@@ -45,5 +51,12 @@ class HelpdeskLog extends Model
     public function dnsServer(): BelongsTo
     {
         return $this->belongsTo(DnsServer::class, 'domain', 'domain');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty();
     }
 }

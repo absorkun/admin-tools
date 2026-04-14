@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'domain',
@@ -25,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class DnsServer extends Model
 {
+    use LogsActivity;
+
     protected $table = 'dns_server';
 
     protected $primaryKey = 'domain';
@@ -59,5 +63,12 @@ class DnsServer extends Model
     public function emailLogExpireds(): HasMany
     {
         return $this->hasMany(EmailLogExpired::class, 'domain', 'domain');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty();
     }
 }

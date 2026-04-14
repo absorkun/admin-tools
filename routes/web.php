@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DnsServerController;
 use App\Http\Controllers\EmailLogExpiredController;
@@ -29,5 +30,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::put('/helpdesk-log/{id}', [HelpdeskLogController::class, 'update'])->name('helpdesk-log.update');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/activity-log', [ActivityLogController::class, 'index'])->name('activity-log.index');
+    Route::get('/activity-log/export/csv', [ActivityLogController::class, 'export'])->name('activity-log.export');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'email_log_id',
@@ -18,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class EmailLogExpired extends Model
 {
+    use LogsActivity;
+
     protected $table = 'email_log_expired';
 
     protected $primaryKey = 'email_log_id';
@@ -38,5 +42,12 @@ class EmailLogExpired extends Model
     public function dnsServer(): BelongsTo
     {
         return $this->belongsTo(DnsServer::class, 'domain', 'domain');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty();
     }
 }

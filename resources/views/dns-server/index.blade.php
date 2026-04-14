@@ -14,8 +14,8 @@
                         </x-slot:aside>
                     </x-page-hero>
 
-                    <x-filter-card :action="route('dns-server.index')" class="grid gap-4 md:grid-cols-2 xl:grid-cols-[1fr_10rem_auto]">
-                        <div class="md:col-span-2 xl:col-span-1">
+                    <x-filter-card :action="route('dns-server.index')" class="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
+                        <div>
                             <label for="search" class="mb-2 block text-sm font-medium text-slate-700">Search</label>
                             <input id="search" name="search" value="{{ $search }}" type="text" placeholder="Domain, name, dns_a, website" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">
                         </div>
@@ -30,7 +30,7 @@
                             </select>
                         </div>
 
-                        <div class="flex items-end gap-3 pt-2 md:col-span-2 xl:col-span-1">
+                        <div class="flex flex-wrap items-center gap-3 pt-2 md:col-span-2">
                             <button type="submit" class="rounded-2xl bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-400">
                                 Apply filter
                             </button>
