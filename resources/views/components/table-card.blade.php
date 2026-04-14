@@ -1,0 +1,13 @@
+@props(['title', 'subtitle' => null])
+
+<x-panel-card class="overflow-hidden p-0">
+    <div class="border-b border-slate-200 px-6 py-4">
+        <h2 class="text-lg font-semibold text-slate-900">{{ $title }}</h2>
+        @if($subtitle)
+            <p class="mt-1 text-sm text-slate-500">{{ $subtitle }}</p>
+        @endif
+    </div>
+    <div class="overflow-hidden">
+        {{ $slot }}
+    </div>
+</x-panel-card>
