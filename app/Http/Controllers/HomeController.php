@@ -33,7 +33,7 @@ class HomeController extends Controller
 
         $recentExpired = DnsServer::query()
             ->select(['domain', 'users_id', 'status', 'tgl_exp'])
-            ->with('user:id,name')
+            ->with('user:id,email')
             ->whereNotNull('tgl_exp')
             ->whereDate('tgl_exp', '<', today())
             ->orderByDesc('tgl_exp')
@@ -42,7 +42,7 @@ class HomeController extends Controller
 
         $upcomingExpiry = DnsServer::query()
             ->select(['domain', 'users_id', 'tgl_exp'])
-            ->with('user:id,name')
+            ->with('user:id,email')
             ->whereNotNull('tgl_exp')
             ->whereBetween('tgl_exp', [today(), today()->addDays(30)])
             ->orderBy('tgl_exp')

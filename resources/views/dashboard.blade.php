@@ -44,7 +44,7 @@
                                     <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 text-sm">
                                         <div>
                                             <span class="font-medium text-slate-900">{{ $domain->domain }}</span>
-                                            <span class="ml-2 text-xs text-slate-500">{{ $domain->user?->name ?? '-' }}</span>
+                                            <span class="ml-2 text-xs text-slate-500">{{ $domain->user?->email ?? '-' }}</span>
                                         </div>
                                         <span class="text-xs text-amber-600">{{ $domain->tgl_exp?->format('d M Y') }}</span>
                                     </div>
@@ -64,7 +64,7 @@
                                     <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 text-sm">
                                         <div>
                                             <span class="font-medium text-slate-900">{{ $domain->domain }}</span>
-                                            <span class="ml-2 text-xs text-slate-500">{{ $domain->user?->name ?? '-' }}</span>
+                                            <span class="ml-2 text-xs text-slate-500">{{ $domain->user?->email ?? '-' }}</span>
                                         </div>
                                         <span class="text-xs text-rose-600">{{ $domain->tgl_exp?->diffForHumans() }}</span>
                                     </div>

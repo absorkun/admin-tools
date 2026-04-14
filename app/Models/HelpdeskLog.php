@@ -23,6 +23,12 @@ class HelpdeskLog extends Model
 
     protected $primaryKey = 'helpdesk_log_id';
 
+    const STATUS_DRAFT = 'Draft';
+    const STATUS_DIPROSES = 'Diproses';
+    const STATUS_SELESAI = 'Selesai';
+
+    const STATUSES = [self::STATUS_DRAFT, self::STATUS_DIPROSES, self::STATUS_SELESAI];
+
     protected function casts(): array
     {
         return [
