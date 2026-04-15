@@ -45,19 +45,17 @@
 
                     <x-table-card title="DNS server list" subtitle="Hasil filter aktif.">
                         <div class="grid grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                            <div class="col-span-4">Domain</div>
+                            <div class="col-span-5">Domain</div>
                             <div class="col-span-3">Owner</div>
                             <div class="col-span-2">Status</div>
-                            <div class="col-span-1">Exp</div>
-                            <div class="col-span-1">Email</div>
-                            <div class="col-span-1">Action</div>
+                            <div class="col-span-2">Exp</div>
                         </div>
 
                         <div class="divide-y divide-slate-200">
                             @forelse ($domains as $domain)
                                 <article class="grid grid-cols-12 gap-4 px-5 py-4 text-sm">
-                                    <div class="col-span-12 md:col-span-4">
-                                        <div class="font-medium text-slate-900">{{ $domain->domain }}</div>
+                                    <div class="col-span-12 md:col-span-5">
+                                        <a href="{{ route('dns-server.show', $domain->domain) }}" class="font-medium text-sky-700 hover:text-sky-500 hover:underline">{{ $domain->domain }}</a>
                                         <div class="mt-1 break-all text-xs text-slate-500">{{ $domain->name_srv ?? '-' }}</div>
                                     </div>
                                     <div class="col-span-12 md:col-span-3">
@@ -74,13 +72,7 @@
                                             <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">{{ $domain->status ?? 'Expired' }}</span>
                                         @endif
                                     </div>
-                                    <div class="col-span-6 md:col-span-1 text-slate-600">{{ $domain->tgl_exp?->format('d M Y') }}</div>
-                                    <div class="col-span-6 md:col-span-1 text-slate-600">{{ $domain->tgl_email?->format('d M Y') }}</div>
-                                    <div class="col-span-6 md:col-span-1">
-                                        <a href="{{ route('email-log-expired.index', ['search' => $domain->domain]) }}" class="inline-flex rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">
-                                            Log
-                                        </a>
-                                    </div>
+                                    <div class="col-span-6 md:col-span-2 text-slate-600">{{ $domain->tgl_exp?->format('d M Y') }}</div>
                                 </article>
                             @empty
                                 <div class="px-5 py-14 text-center text-sm text-slate-500">

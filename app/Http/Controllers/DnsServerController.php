@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Concerns\StreamsCsv;
 use App\Models\DnsServer;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DnsServerController extends Controller
 {
@@ -63,6 +63,17 @@ class DnsServerController extends Controller
         ]);
     }
 
+    public function show(string $domain): View
+    {
+        $dnsServer = DnsServer::query()
+            ->with(['user:id,name,email'])
+            ->findOrFail($domain);
+
+        return view('dns-server.show', [
+            'dnsServer' => $dnsServer,
+        ]);
+    }
+
     public function export(Request $request): StreamedResponse
     {
         $search = $request->string('search')->toString();
@@ -72,8 +83,8 @@ class DnsServerController extends Controller
         $query = $this->baseQuery($search);
         $domains = $query->orderBy('domain')->limit($limit)->get();
 
-        $fileName = 'dns-server' . now()->format('Y-m-d-H-i-s');
-        
+        $fileName = 'dns-server'.now()->format('Y-m-d-H-i-s');
+
         return $this->streamCsvDownload($fileName, [
             'Domain',
             'Owner',

@@ -17,6 +17,7 @@ Route::middleware(['auth', 'role:super_admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/dns-server', [DnsServerController::class, 'index'])->name('dns-server.index');
     Route::get('/dns-server/export/csv', [DnsServerController::class, 'export'])->name('dns-server.export');
+    Route::get('/dns-server/{domain}', [DnsServerController::class, 'show'])->name('dns-server.show');
     Route::get('/email-log-expired', [EmailLogExpiredController::class, 'index'])->name('email-log-expired.index');
     Route::get('/email-log-expired/export/csv', [EmailLogExpiredController::class, 'export'])->name('email-log-expired.export');
     Route::get('/suspend-queue', [SuspendQueueController::class, 'index'])->name('suspend-queue.index');

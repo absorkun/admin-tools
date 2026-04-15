@@ -2,46 +2,41 @@
 
 ## Overview
 
-- Internal app for Domain Name Team
-- Manage domain registrations under Domain.go.id
-- Act as domain Registrar
+- Internal app, Domain Name Team — manage domain registrations under Domain.go.id (Registrar)
 - Indonesian only, locale `id_ID`
-- Avoid Node.js runtime — use NPM only as package manager + build tool
-- UI color scheme: White (not very white) background, Dark Blue base, Light Blue accent
-- Prioritize formal typography
+- No Node.js runtime — NPM for package manager + build only
+- UI: white bg, dark blue base, light blue accent, formal typography
 
 ## Development Flow
 
-Follow order strict — no skip, no reverse:
+Strict order — no skip, no reverse:
 
-1. Database (write raw queries first, minimize magic + abstraction)
+1. Database (raw queries first, minimize magic)
 2. Config
 3. Model
-4. Service (synchronous-first, avoid queues unless absolutely necessary)
-5. Controller (separate API handlers and View handlers)
-6. Transport: REST (JSON) and HTML (Blade templates)
+4. Service (sync-first, avoid queues unless necessary)
+5. Controller (separate API + View handlers)
+6. Transport: REST (JSON) + HTML (Blade)
 
 ## Authentication
 
-- Login via username + password
-- Email verification: stub now, activate only when production-ready
+- Login: username + password
+- Email verification: stub now, activate when production-ready
 
 ## AI Agent Instructions
 
-- Always use installed `$caveman` plugin
-- Start every feature from database layer before touching above it
-- Do not generate unrequested boilerplate
-- One file per instruction unless explicitly asked otherwise
-- Write all code comments in Indonesian
+- Use installed `$caveman` or /caveman plugin
+- Start features from database layer up
+- No unrequested boilerplate
+- One file per instruction unless asked otherwise
+- Code comments in Indonesian
 
 ## Owner Rules
 
-- Ikuti `ARCHITECTURE.md` ini sebagai instruksi utama dari owner.
-- Jika ada konflik dengan instruksi lain, minta klarifikasi dulu sebelum ubah file penting.
-- Database existing source of truth.
-- Jangan ubah schema tabel yang sudah berisi data, kecuali owner minta eksplisit.
-- Untuk data migration, export/import dulu, jangan truncate atau recreate tabel yang sudah terpakai.
-- Model harus mengikuti schema nyata di database, bukan asumsi default Laravel.
-- Relationship hanya tambah kalau jelas dari schema atau konfirmasi owner.
-- Jangan tambah boilerplate, service, test, atau layer baru kalau belum diminta.
-- Jaga perubahan kecil, terarah, dan kompatibel dengan data lama.
+- This file = primary owner instruction. Conflicts → ask before changing important files.
+- DB = source of truth. No schema changes on populated tables unless owner asks.
+- Data migration: export/import first, never truncate/recreate used tables.
+- Model follows real DB schema, not Laravel defaults.
+- Add relationships only when clear from schema or owner confirms.
+- No boilerplate, services, tests, or new layers unless requested.
+- Keep changes small, targeted, backward-compatible.
