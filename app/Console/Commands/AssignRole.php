@@ -6,7 +6,7 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
-#[Signature('app:assign-role')]
+#[Signature('role:assign')]
 #[Description('Command description')]
 class AssignRole extends Command
 {
