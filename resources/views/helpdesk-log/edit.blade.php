@@ -6,46 +6,7 @@
                     />
 
                     <x-panel-card>
-                        <div class="space-y-4 border-b border-slate-200 pb-6">
-                            <div class="grid gap-4 md:grid-cols-2">
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Pelapor</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ $log->pelapor_nama }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Email pelapor</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ $log->pelapor_email }}</div>
-                                </div>
-                                @if ($log->pelapor_phone)
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Telepon pelapor</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ $log->pelapor_phone }}</div>
-                                </div>
-                                @endif
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Domain</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ $log->domain ?? '-' }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Sumber</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ ucfirst($log->sumber) }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Dicatat oleh</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ $log->user?->name ?? '-' }}</div>
-                                </div>
-                                <div>
-                                    <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Tanggal</div>
-                                    <div class="mt-1 font-medium text-slate-900">{{ $log->created_at?->format('d M Y H:i') }}</div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="text-xs uppercase tracking-[0.18em] text-slate-500">Isi laporan</div>
-                                <div class="mt-2 rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-700">{{ $log->isi_laporan }}</div>
-                            </div>
-                        </div>
-
-                        <form method="POST" action="{{ route('helpdesk-log.update', $log->helpdesk_log_id) }}" class="space-y-6 pt-6">
+                        <form method="POST" action="{{ route('helpdesk-log.update', $log->helpdesk_log_id) }}" class="space-y-6">
                             @csrf
                             @method('PUT')
 
@@ -61,18 +22,65 @@
 
                             <div class="grid gap-6 md:grid-cols-2">
                                 <div>
+                                    <label for="pelapor_nama" class="mb-2 block text-sm font-medium text-slate-700">Nama Pelapor</label>
+                                    <input id="pelapor_nama" name="pelapor_nama" type="text" value="{{ old('pelapor_nama', $log->pelapor_nama) }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">
+                                </div>
+
+                                <div>
+                                    <label for="pelapor_phone" class="mb-2 block text-sm font-medium text-slate-700">Nomor Kontak</label>
+                                    <input id="pelapor_phone" name="pelapor_phone" type="text" value="{{ old('pelapor_phone', $log->pelapor_phone) }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">
+                                </div>
+
+                                <div>
+                                    <label for="pelapor_email" class="mb-2 block text-sm font-medium text-slate-700">Email (opsional)</label>
+                                    <input id="pelapor_email" name="pelapor_email" type="email" value="{{ old('pelapor_email', $log->pelapor_email) }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">
+                                </div>
+
+                                <div>
+                                    <label for="domain" class="mb-2 block text-sm font-medium text-slate-700">Nama Domain</label>
+                                    <input id="domain" name="domain" type="text" value="{{ old('domain', $log->domain) }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">
+                                </div>
+
+                                <div>
+                                    <label for="jenis_layanan" class="mb-2 block text-sm font-medium text-slate-700">Jenis Layanan</label>
+                                    <select id="jenis_layanan" name="jenis_layanan" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                                        @foreach (\App\Models\HelpdeskLog::JENIS_LAYANAN as $jl)
+                                            <option value="{{ $jl }}" @selected(old('jenis_layanan', $log->jenis_layanan) === $jl)>{{ $jl }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="kanal" class="mb-2 block text-sm font-medium text-slate-700">Kanal</label>
+                                    <select id="kanal" name="kanal" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                                        @foreach (\App\Models\HelpdeskLog::KANAL as $k)
+                                            <option value="{{ $k }}" @selected(old('kanal', $log->kanal) === $k)>{{ $k }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div>
                                     <label for="status" class="mb-2 block text-sm font-medium text-slate-700">Status</label>
                                     <select id="status" name="status" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
-                                        <option value="baru" @selected(old('status', $log->status) === 'baru')>Baru</option>
-                                        <option value="proses" @selected(old('status', $log->status) === 'proses')>Proses</option>
-                                        <option value="selesai" @selected(old('status', $log->status) === 'selesai')>Selesai</option>
+                                        <option value="Diproses" @selected(old('status', $log->status) === 'Diproses')>Proses</option>
+                                        <option value="Selesai" @selected(old('status', $log->status) === 'Selesai')>Selesai</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div>
-                                <label for="catatan_admin" class="mb-2 block text-sm font-medium text-slate-700">Catatan admin</label>
-                                <textarea id="catatan_admin" name="catatan_admin" rows="4" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300" placeholder="Tambah catatan internal...">{{ old('catatan_admin', $log->catatan_admin) }}</textarea>
+                                <label for="deskripsi" class="mb-2 block text-sm font-medium text-slate-700">Deskripsi</label>
+                                <textarea id="deskripsi" name="deskripsi" rows="5" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">{{ old('deskripsi', $log->deskripsi) }}</textarea>
+                            </div>
+
+                            <div>
+                                <label for="catatan_tambahan" class="mb-2 block text-sm font-medium text-slate-700">Catatan Tambahan</label>
+                                <textarea id="catatan_tambahan" name="catatan_tambahan" rows="4" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300" placeholder="Tambah catatan...">{{ old('catatan_tambahan', $log->catatan_tambahan) }}</textarea>
+                            </div>
+
+                            <div class="space-y-2 text-xs text-slate-400">
+                                <div>Dicatat oleh: {{ $log->user?->name ?? '-' }}</div>
+                                <div>Tanggal: {{ $log->created_at?->format('d M Y H:i') }}</div>
                             </div>
 
                             <div class="flex flex-wrap items-center gap-3 pt-2">

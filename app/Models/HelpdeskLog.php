@@ -13,10 +13,11 @@ use Spatie\Activitylog\Support\LogOptions;
     'pelapor_nama',
     'pelapor_email',
     'pelapor_phone',
-    'sumber',
-    'isi_laporan',
+    'jenis_layanan',
+    'kanal',
+    'deskripsi',
     'status',
-    'catatan_admin',
+    'catatan_tambahan',
     'users_id',
 ])]
 class HelpdeskLog extends Model
@@ -27,13 +28,27 @@ class HelpdeskLog extends Model
 
     protected $primaryKey = 'helpdesk_log_id';
 
-    const STATUS_DRAFT = 'Draft';
-
     const STATUS_DIPROSES = 'Diproses';
 
     const STATUS_SELESAI = 'Selesai';
 
-    const STATUSES = [self::STATUS_DRAFT, self::STATUS_DIPROSES, self::STATUS_SELESAI];
+    const STATUSES = [self::STATUS_DIPROSES, self::STATUS_SELESAI];
+
+    const KANAL = [
+        'Whatsapp',
+        'Email',
+        'Aplikasi Domain',
+        'Aplikasi Layanan Bantuan',
+    ];
+
+    const JENIS_LAYANAN = [
+        'Pendaftaran Nama Domain',
+        'Permintaan Reset Password',
+        'Informasi',
+        'Insiden',
+        'Perpanjangan Nama Domain',
+        'Pembaharuan Nameserver',
+    ];
 
     protected function casts(): array
     {

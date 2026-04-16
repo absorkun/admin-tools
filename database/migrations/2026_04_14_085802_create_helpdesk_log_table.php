@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('pelapor');
             $table->string('sumber', 50);
             $table->text('isi_laporan');
-            $table->enum('status', ['Draft', 'Diproses', 'Selesai'])->default('Diproses');
+            $table->enum('status', ['Diproses', 'Selesai'])->default('Diproses');
             $table->text('catatan_admin')->nullable();
             $table->unsignedBigInteger('users_id');
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\HelpdeskLog;
 use Illuminate\Foundation\Http\FormRequest;
 
 class HelpdeskLogUpdateRequest extends FormRequest
@@ -20,8 +21,15 @@ class HelpdeskLogUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', 'string', 'in:baru,proses,selesai'],
-            'catatan_admin' => ['nullable', 'string'],
+            'domain' => ['required', 'string', 'max:255', 'exists:dns_server,domain'],
+            'pelapor_nama' => ['required', 'string', 'max:255'],
+            'pelapor_email' => ['nullable', 'string', 'email', 'max:255'],
+            'pelapor_phone' => ['required', 'string', 'max:50'],
+            'jenis_layanan' => ['required', 'string', 'in:'.implode(',', HelpdeskLog::JENIS_LAYANAN)],
+            'kanal' => ['required', 'string', 'in:'.implode(',', HelpdeskLog::KANAL)],
+            'deskripsi' => ['required', 'string'],
+            'status' => ['required', 'string', 'in:Diproses,Selesai'],
+            'catatan_tambahan' => ['nullable', 'string'],
         ];
     }
 }

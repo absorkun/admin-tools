@@ -23,15 +23,14 @@ class HelpdeskLogController extends Controller
         $limit = in_array($limit, [10, 20, 50, 100], true) ? $limit : 20;
 
         $query = HelpdeskLog::query()
-            ->select(['helpdesk_log_id', 'domain', 'pelapor_nama', 'pelapor_email', 'sumber', 'isi_laporan', 'status', 'users_id', 'created_at'])
+            ->select(['helpdesk_log_id', 'domain', 'pelapor_nama', 'pelapor_phone', 'jenis_layanan', 'kanal', 'deskripsi', 'status', 'users_id', 'created_at'])
             ->with('user:id,name');
 
         if ($search !== '') {
             $query->where(function ($q) use ($search): void {
                 $q->where('domain', 'like', "%{$search}%")
                     ->orWhere('pelapor_nama', 'like', "%{$search}%")
-                    ->orWhere('pelapor_email', 'like', "%{$search}%")
-                    ->orWhere('isi_laporan', 'like', "%{$search}%");
+                    ->orWhere('deskripsi', 'like', "%{$search}%");
             });
         }
 
@@ -43,9 +42,8 @@ class HelpdeskLogController extends Controller
 
         $stats = [
             'total' => HelpdeskLog::query()->count(),
-            'baru' => HelpdeskLog::query()->where('status', 'baru')->count(),
-            'proses' => HelpdeskLog::query()->where('status', 'proses')->count(),
-            'selesai' => HelpdeskLog::query()->where('status', 'selesai')->count(),
+            'proses' => HelpdeskLog::query()->where('status', HelpdeskLog::STATUS_DIPROSES)->count(),
+            'selesai' => HelpdeskLog::query()->where('status', HelpdeskLog::STATUS_SELESAI)->count(),
         ];
 
         return view('helpdesk-log.index', [
@@ -113,33 +111,35 @@ class HelpdeskLogController extends Controller
 
         $logs = $query->get();
 
-        $fileName = 'helpdesk-log-' . now()->format('Y-m-d-H-i-s');
+        $fileName = 'helpdesk-log-'.now()->format('Y-m-d-H-i-s');
 
         return $this->streamCsvDownload($fileName, [
             'ID',
-            'Domain',
-            'Pelapor Nama',
-            'Pelapor Email',
-            'Pelapor Phone',
-            'Sumber',
-            'Isi Laporan',
-            'Status',
-            'Admin',
-            'Catatan Admin',
             'Tanggal',
+            'Domain',
+            'Pelapor',
+            'Kontak',
+            'Email',
+            'Jenis Layanan',
+            'Kanal',
+            'Deskripsi',
+            'Agent',
+            'Status',
+            'Catatan Tambahan',
         ], $logs->map(function (HelpdeskLog $log): array {
             return [
                 (string) $log->helpdesk_log_id,
+                $log->created_at?->format('Y-m-d H:i:s') ?? '-',
                 $log->domain ?? '-',
                 $log->pelapor_nama,
-                $log->pelapor_email,
-                $log->pelapor_phone ?? '-',
-                $log->sumber,
-                $log->isi_laporan,
-                $log->status,
+                $log->pelapor_phone,
+                $log->pelapor_email ?? '-',
+                $log->jenis_layanan,
+                $log->kanal,
+                $log->deskripsi,
                 $log->user?->name ?? '-',
-                $log->catatan_admin ?? '-',
-                $log->created_at?->format('Y-m-d H:i:s') ?? '-',
+                $log->status,
+                $log->catatan_tambahan ?? '-',
             ];
         })->all());
     }
