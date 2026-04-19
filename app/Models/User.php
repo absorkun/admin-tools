@@ -7,7 +7,6 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -60,15 +59,10 @@ class User extends Authenticatable
         ];
     }
 
-    public function dnsServers(): HasMany
-    {
-        return $this->hasMany(DnsServer::class, 'users_id');
-    }
-
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logFillable()
+            ->logOnly(['name', 'email', 'email_alternative', 'status', 'phone', 'province_id', 'city_id', 'postal_code', 'name_organization', 'address', 'fax', 'is_migrasi', 'send_email'])
             ->logOnlyDirty();
     }
 

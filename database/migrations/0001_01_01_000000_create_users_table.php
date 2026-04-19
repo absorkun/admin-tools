@@ -18,6 +18,21 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('email_alternative')->nullable();
+            $table->integer('count_verification')->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->string('phone')->nullable();
+            $table->string('image')->nullable();
+            $table->string('doc_user_1')->nullable();
+            $table->string('id_contact_epp')->nullable();
+            $table->integer('province_id')->nullable();
+            $table->integer('city_id')->nullable();
+            $table->char('postal_code', 6)->nullable();
+            $table->text('name_organization')->nullable();
+            $table->text('address')->nullable();
+            $table->string('fax')->nullable();
+            $table->tinyInteger('is_migrasi')->nullable();
+            $table->tinyInteger('send_email')->nullable();
             $table->timestamps();
         });
 

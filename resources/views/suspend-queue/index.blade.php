@@ -1,10 +1,4 @@
 <x-dashboard-shell title="Suspend Queue" active="suspend-queue">
-                    <x-page-hero
-                        eyebrow="Suspend ready"
-                        title="Domain expired siap suspend"
-                        description="Domain expired yang sudah 14 hari atau lebih sejak email terakhir."
-                    />
-
                         @if (session('status'))
                             <div class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                                 {{ session('status') }}
@@ -41,28 +35,26 @@
 
                     <x-table-card title="Domain list" subtitle="Hasil filter aktif.">
                         <div class="grid grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                            <div class="col-span-3">Domain</div>
+                            <div class="col-span-4">Domain</div>
+                            <div class="col-span-2">Zone</div>
                             <div class="col-span-2">Status</div>
                             <div class="col-span-2">Expired</div>
-                            <div class="col-span-2">Email sent</div>
-                            <div class="col-span-1">Notif</div>
                             <div class="col-span-2">Action</div>
                         </div>
 
                         <div class="divide-y divide-slate-200">
                             @forelse ($domains as $domain)
                                 <article class="grid grid-cols-12 gap-4 px-5 py-4 text-sm">
-                                    <div class="col-span-12 md:col-span-3">
-                                        <div class="font-medium text-slate-900">{{ $domain->domain }}</div>
+                                    <div class="col-span-12 md:col-span-4">
+                                        <div class="font-medium text-slate-900">{{ $domain->name }}</div>
                                     </div>
+                                    <div class="col-span-6 md:col-span-2 text-slate-600">{{ $domain->zone }}</div>
                                     <div class="col-span-6 md:col-span-2">
-                                        <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">Ready suspend</span>
+                                        <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">{{ ucfirst($domain->status) }}</span>
                                     </div>
-                                    <div class="col-span-6 md:col-span-2 text-slate-600">{{ $domain->tgl_exp?->format('d M Y') ?? '-' }}</div>
-                                    <div class="col-span-6 md:col-span-2 text-slate-600">{{ $domain->tgl_email?->format('d M Y') ?? '-' }}</div>
-                                    <div class="col-span-6 md:col-span-1 text-slate-600">{{ $domain->jumlah_notif ?? 0 }}</div>
+                                    <div class="col-span-6 md:col-span-2 text-slate-600">{{ $domain->expired_date?->format('d M Y') ?? '-' }}</div>
                                     <div class="col-span-6 md:col-span-2">
-                                        <form method="POST" action="{{ route('suspend-queue.suspend', $domain->domain) }}" onsubmit="return confirm('Suspend domain {{ $domain->domain }}?');">
+                                        <form method="POST" action="{{ route('suspend-queue.suspend', $domain->id) }}" onsubmit="return confirm('Suspend domain {{ $domain->name }}?');">
                                             @csrf
                                             <button type="submit" class="inline-flex rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">
                                                 Suspend

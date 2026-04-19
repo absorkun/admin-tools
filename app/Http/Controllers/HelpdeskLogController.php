@@ -19,38 +19,41 @@ class HelpdeskLogController extends Controller
     {
         $search = $request->string('search')->toString();
         $status = $request->string('status')->toString();
+        $dateFrom = $request->string('date_from')->toString();
+        $dateTo = $request->string('date_to')->toString();
+        if ($dateTo === '') {
+            $dateTo = now()->toDateString();
+        }
         $limit = (int) $request->integer('limit', 20);
         $limit = in_array($limit, [10, 20, 50, 100], true) ? $limit : 20;
 
         $query = HelpdeskLog::query()
             ->select(['helpdesk_log_id', 'domain', 'pelapor_nama', 'pelapor_phone', 'jenis_layanan', 'kanal', 'deskripsi', 'status', 'users_id', 'created_at'])
-            ->with('user:id,name');
+            ->with('user:id,name')
+            ->with('domainRecord:name,zone');
 
         if ($search !== '') {
-            $query->where(function ($q) use ($search): void {
-                $q->where('domain', 'like', "%{$search}%")
-                    ->orWhere('pelapor_nama', 'like', "%{$search}%")
-                    ->orWhere('deskripsi', 'like', "%{$search}%");
-            });
+            $query->where('domain', 'like', "%{$search}%");
         }
 
         if ($status !== '') {
             $query->where('status', $status);
         }
 
-        $logs = $query->orderByDesc('created_at')->limit($limit)->get();
+        if ($dateFrom !== '') {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
 
-        $stats = [
-            'total' => HelpdeskLog::query()->count(),
-            'proses' => HelpdeskLog::query()->where('status', HelpdeskLog::STATUS_DIPROSES)->count(),
-            'selesai' => HelpdeskLog::query()->where('status', HelpdeskLog::STATUS_SELESAI)->count(),
-        ];
+        $query->whereDate('created_at', '<=', $dateTo);
+
+        $logs = $query->orderByDesc('created_at')->limit($limit)->get();
 
         return view('helpdesk-log.index', [
             'logs' => $logs,
-            'stats' => $stats,
             'search' => $search,
             'status' => $status,
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
             'limit' => $limit,
         ]);
     }
@@ -62,8 +65,16 @@ class HelpdeskLogController extends Controller
 
     public function store(HelpdeskLogStoreRequest $request): RedirectResponse
     {
+        $data = $request->validated();
+        if ($data['jenis_layanan'] === 'Lainnya' && $request->filled('jenis_layanan_lainnya')) {
+            $data['jenis_layanan'] = $request->string('jenis_layanan_lainnya')->toString();
+        }
+        if ($data['kanal'] === 'Lainnya' && $request->filled('kanal_lainnya')) {
+            $data['kanal'] = $request->string('kanal_lainnya')->toString();
+        }
+
         HelpdeskLog::query()->create([
-            ...$request->validated(),
+            ...$data,
             'users_id' => auth()->id(),
         ]);
 
@@ -82,7 +93,14 @@ class HelpdeskLogController extends Controller
     public function update(HelpdeskLogUpdateRequest $request, int $id): RedirectResponse
     {
         $log = HelpdeskLog::query()->findOrFail($id);
-        $log->update($request->validated());
+        $data = $request->validated();
+        if ($data['jenis_layanan'] === 'Lainnya' && $request->filled('jenis_layanan_lainnya')) {
+            $data['jenis_layanan'] = $request->string('jenis_layanan_lainnya')->toString();
+        }
+        if ($data['kanal'] === 'Lainnya' && $request->filled('kanal_lainnya')) {
+            $data['kanal'] = $request->string('kanal_lainnya')->toString();
+        }
+        $log->update($data);
 
         return redirect()->route('helpdesk-log.index')->with('status', 'Status laporan diperbarui.');
     }
@@ -91,23 +109,29 @@ class HelpdeskLogController extends Controller
     {
         $search = $request->string('search')->toString();
         $status = $request->string('status')->toString();
+        $dateFrom = $request->string('date_from')->toString();
+        $dateTo = $request->string('date_to')->toString();
+        if ($dateTo === '') {
+            $dateTo = now()->toDateString();
+        }
 
         $query = HelpdeskLog::query()
             ->with('user:id,name')
             ->orderByDesc('created_at');
 
         if ($search !== '') {
-            $query->where(function ($q) use ($search): void {
-                $q->where('domain', 'like', "%{$search}%")
-                    ->orWhere('pelapor_nama', 'like', "%{$search}%")
-                    ->orWhere('pelapor_email', 'like', "%{$search}%")
-                    ->orWhere('isi_laporan', 'like', "%{$search}%");
-            });
+            $query->where('domain', 'like', "%{$search}%");
         }
 
         if ($status !== '') {
             $query->where('status', $status);
         }
+
+        if ($dateFrom !== '') {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+
+        $query->whereDate('created_at', '<=', $dateTo);
 
         $logs = $query->get();
 

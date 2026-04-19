@@ -39,6 +39,7 @@ class HelpdeskLog extends Model
         'Email',
         'Aplikasi Domain',
         'Aplikasi Layanan Bantuan',
+        'Lainnya',
     ];
 
     const JENIS_LAYANAN = [
@@ -48,6 +49,8 @@ class HelpdeskLog extends Model
         'Insiden',
         'Perpanjangan Nama Domain',
         'Pembaharuan Nameserver',
+        'Domain Kadaluarsa',
+        'Lainnya',
     ];
 
     protected function casts(): array
@@ -63,9 +66,9 @@ class HelpdeskLog extends Model
         return $this->belongsTo(User::class, 'users_id');
     }
 
-    public function dnsServer(): BelongsTo
+    public function domainRecord(): BelongsTo
     {
-        return $this->belongsTo(DnsServer::class, 'domain', 'domain');
+        return $this->belongsTo(Domain::class, 'domain', 'name');
     }
 
     public function getActivitylogOptions(): LogOptions

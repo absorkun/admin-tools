@@ -18,7 +18,7 @@
     <details class="group relative">
         <summary class="flex cursor-pointer list-none items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 transition hover:border-sky-200">
             <span class="flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-sky-700">{{ auth()->user()?->initials() }}</span>
-            <span class="hidden sm:block">{{ auth()->user()?->name ?? "Unkown" }}</span>
+            <span class="hidden sm:block">{{ auth()->user()?->name ?? 'Unknown' }}</span>
             <span class="text-slate-400 transition group-open:rotate-180">⌄</span>
         </summary>
         <div class="absolute right-0 z-20 mt-3 w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-sky-100/60">

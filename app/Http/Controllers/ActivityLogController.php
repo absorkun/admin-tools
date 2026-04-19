@@ -14,9 +14,6 @@ class ActivityLogController extends Controller
 
     public function index(Request $request): View
     {
-        $search = $request->string('search')->toString();
-        $dateFrom = $request->string('date_from')->toString() ?: now()->format('Y-m-d');
-        $dateTo = $request->string('date_to')->toString() ?: now()->format('Y-m-d');
         $subjectType = $request->string('subject_type')->toString();
         $limit = (int) $request->integer('limit', 20);
         $limit = in_array($limit, [10, 20, 50, 100], true) ? $limit : 20;
@@ -24,16 +21,6 @@ class ActivityLogController extends Controller
         $query = Activity::query()
             ->with('causer')
             ->latest();
-
-        if ($search !== '') {
-            $query->where(function ($q) use ($search): void {
-                $q->where('description', 'like', "%{$search}%")
-                    ->orWhere('properties', 'like', "%{$search}%");
-            });
-        }
-
-        $query->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo);
 
         if ($subjectType !== '') {
             $query->where('subject_type', $subjectType);
@@ -46,9 +33,6 @@ class ActivityLogController extends Controller
         return view('activity-log.index', [
             'logs' => $logs,
             'subjectTypes' => $subjectTypes,
-            'search' => $search,
-            'dateFrom' => $dateFrom,
-            'dateTo' => $dateTo,
             'subjectType' => $subjectType,
             'limit' => $limit,
         ]);
@@ -56,24 +40,11 @@ class ActivityLogController extends Controller
 
     public function export(Request $request): StreamedResponse
     {
-        $search = $request->string('search')->toString();
-        $dateFrom = $request->string('date_from')->toString() ?: now()->format('Y-m-d');
-        $dateTo = $request->string('date_to')->toString() ?: now()->format('Y-m-d');
         $subjectType = $request->string('subject_type')->toString();
 
         $query = Activity::query()
             ->with('causer')
             ->latest();
-
-        if ($search !== '') {
-            $query->where(function ($q) use ($search): void {
-                $q->where('description', 'like', "%{$search}%")
-                    ->orWhere('properties', 'like', "%{$search}%");
-            });
-        }
-
-        $query->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo);
 
         if ($subjectType !== '') {
             $query->where('subject_type', $subjectType);

@@ -1,10 +1,4 @@
 <x-dashboard-shell title="Edit Laporan" active="helpdesk-log">
-                    <x-page-hero
-                        eyebrow="Helpdesk"
-                        title="Edit laporan #{{ $log->helpdesk_log_id }}"
-                        description="Update status dan catatan admin untuk laporan ini."
-                    />
-
                     <x-panel-card>
                         <form method="POST" action="{{ route('helpdesk-log.update', $log->helpdesk_log_id) }}" class="space-y-6">
                             @csrf
@@ -41,40 +35,43 @@
                                     <input id="domain" name="domain" type="text" value="{{ old('domain', $log->domain) }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">
                                 </div>
 
-                                <div>
+                                <div x-data="{ layanan: '{{ old('jenis_layanan', $log->jenis_layanan) }}' }">
                                     <label for="jenis_layanan" class="mb-2 block text-sm font-medium text-slate-700">Jenis Layanan</label>
-                                    <select id="jenis_layanan" name="jenis_layanan" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                                    <select id="jenis_layanan" name="jenis_layanan" x-model="layanan" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                         @foreach (\App\Models\HelpdeskLog::JENIS_LAYANAN as $jl)
                                             <option value="{{ $jl }}" @selected(old('jenis_layanan', $log->jenis_layanan) === $jl)>{{ $jl }}</option>
                                         @endforeach
                                     </select>
+                                    <input x-show="layanan === 'Lainnya'" x-cloak type="text" name="jenis_layanan_lainnya" value="{{ old('jenis_layanan_lainnya') }}" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300" placeholder="Ketik jenis layanan...">
                                 </div>
 
-                                <div>
+                                <div x-data="{ kanal: '{{ old('kanal', $log->kanal) }}' }">
                                     <label for="kanal" class="mb-2 block text-sm font-medium text-slate-700">Kanal</label>
-                                    <select id="kanal" name="kanal" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                                    <select id="kanal" name="kanal" x-model="kanal" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                         @foreach (\App\Models\HelpdeskLog::KANAL as $k)
                                             <option value="{{ $k }}" @selected(old('kanal', $log->kanal) === $k)>{{ $k }}</option>
                                         @endforeach
                                     </select>
+                                    <input x-show="kanal === 'Lainnya'" x-cloak type="text" name="kanal_lainnya" value="{{ old('kanal_lainnya') }}" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300" placeholder="Ketik kanal...">
                                 </div>
 
                                 <div>
                                     <label for="status" class="mb-2 block text-sm font-medium text-slate-700">Status</label>
                                     <select id="status" name="status" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
-                                        <option value="Diproses" @selected(old('status', $log->status) === 'Diproses')>Proses</option>
-                                        <option value="Selesai" @selected(old('status', $log->status) === 'Selesai')>Selesai</option>
+                                        @foreach (\App\Models\HelpdeskLog::STATUSES as $s)
+                                            <option value="{{ $s }}" @selected(old('status', $log->status) === $s)>{{ $s }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
 
                             <div>
-                                <label for="deskripsi" class="mb-2 block text-sm font-medium text-slate-700">Deskripsi</label>
+                                <label for="deskripsi" class="mb-2 block text-sm font-medium text-slate-700">Pertanyaan</label>
                                 <textarea id="deskripsi" name="deskripsi" rows="5" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300">{{ old('deskripsi', $log->deskripsi) }}</textarea>
                             </div>
 
                             <div>
-                                <label for="catatan_tambahan" class="mb-2 block text-sm font-medium text-slate-700">Catatan Tambahan</label>
+                                <label for="catatan_tambahan" class="mb-2 block text-sm font-medium text-slate-700">Jawaban (opsional)</label>
                                 <textarea id="catatan_tambahan" name="catatan_tambahan" rows="4" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300" placeholder="Tambah catatan...">{{ old('catatan_tambahan', $log->catatan_tambahan) }}</textarea>
                             </div>
 

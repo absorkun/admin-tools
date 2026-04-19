@@ -21,7 +21,7 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return back()
                 ->withErrors([
                     'name' => 'Credential tidak cocok.',
@@ -29,9 +29,9 @@ class AuthController extends Controller
                 ->onlyInput('name');
         }
 
-        if (!auth()->user()->hasRole(['super_admin'])) {
+        if (! auth()->user()->hasAnyRole(['super_admin', 'pandi', 'helpdesk'])) {
             return back()->withErrors([
-                'name' => 'User tidak punya akses ke halaman admin'
+                'name' => 'User tidak punya akses ke halaman admin',
             ])->onlyInput('name');
         }
 

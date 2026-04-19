@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('helpdesk_log', function (Blueprint $table) {
             $table->id('helpdesk_log_id');
-            $table->string('domain')->nullable();
-            $table->string('pelapor');
-            $table->string('sumber', 50);
-            $table->text('isi_laporan');
+            $table->string('domain');
+            $table->string('pelapor_nama');
+            $table->string('pelapor_email')->nullable();
+            $table->string('pelapor_phone');
+            $table->string('jenis_layanan');
+            $table->string('kanal', 50);
+            $table->text('deskripsi');
             $table->enum('status', ['Diproses', 'Selesai'])->default('Diproses');
-            $table->text('catatan_admin')->nullable();
+            $table->text('catatan_tambahan')->nullable();
             $table->unsignedBigInteger('users_id');
             $table->timestamps();
 

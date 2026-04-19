@@ -1,26 +1,4 @@
 <x-dashboard-shell title="Profile" active="profile">
-                    <x-page-hero
-                        eyebrow="Akun"
-                        title="Edit profil"
-                        description="Ubah nama, email, password, atau foto profil kamu di sini."
-                    >
-                        <x-slot:aside>
-                            <div class="flex items-center gap-4 rounded-2xl bg-slate-50 p-4">
-                                @if ($user->image)
-                                    <img src="{{ Storage::url($user->image) }}" alt="{{ $user->name }}" class="h-16 w-16 rounded-full object-cover">
-                                @else
-                                    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-sky-100 text-2xl font-semibold text-sky-700">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </span>
-                                @endif
-                                <div>
-                                    <div class="font-semibold text-slate-900">{{ $user->name }}</div>
-                                    <div class="text-sm text-slate-500">{{ $user->email }}</div>
-                                </div>
-                            </div>
-                        </x-slot:aside>
-                    </x-page-hero>
-
                     @if (session('status'))
                         <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
                             {{ session('status') }}
@@ -44,7 +22,7 @@
 
                             <div class="grid gap-6 md:grid-cols-2">
                                 <div>
-                                    <label for="name" class="mb-2 block text-sm font-medium text-slate-700">Nama</label>
+                                    <label for="name" class="mb-2 block text-sm font-medium text-slate-700">Username</label>
                                     <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300" placeholder="Username">
                                 </div>
 

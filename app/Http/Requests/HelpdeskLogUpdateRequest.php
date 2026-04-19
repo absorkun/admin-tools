@@ -21,7 +21,7 @@ class HelpdeskLogUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'domain' => ['required', 'string', 'max:255', 'exists:dns_server,domain'],
+            'domain' => ['required', 'string', 'max:255', 'exists:domains,name'],
             'pelapor_nama' => ['required', 'string', 'max:255'],
             'pelapor_email' => ['nullable', 'string', 'email', 'max:255'],
             'pelapor_phone' => ['required', 'string', 'max:50'],
@@ -30,6 +30,35 @@ class HelpdeskLogUpdateRequest extends FormRequest
             'deskripsi' => ['required', 'string'],
             'status' => ['required', 'string', 'in:Diproses,Selesai'],
             'catatan_tambahan' => ['nullable', 'string'],
+            'jenis_layanan_lainnya' => ['nullable', 'string', 'max:255'],
+            'kanal_lainnya' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'domain' => 'nama domain',
+            'pelapor_nama' => 'nama pelapor',
+            'pelapor_email' => 'email pelapor',
+            'pelapor_phone' => 'nomor kontak',
+            'jenis_layanan' => 'jenis layanan',
+            'kanal' => 'kanal',
+            'deskripsi' => 'pertanyaan',
+            'status' => 'status',
+            'catatan_tambahan' => 'jawaban',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'required' => ':Attribute wajib diisi.',
+            'string' => ':Attribute harus berupa teks.',
+            'max' => ':Attribute maksimal :max karakter.',
+            'email' => ':Attribute harus berformat email yang valid.',
+            'in' => ':Attribute yang dipilih tidak valid.',
+            'exists' => ':Attribute tidak ditemukan dalam sistem.',
         ];
     }
 }

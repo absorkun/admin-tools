@@ -39,9 +39,9 @@ class EmailLogExpired extends Model
         ];
     }
 
-    public function dnsServer(): BelongsTo
+    public function domain(): BelongsTo
     {
-        return $this->belongsTo(DnsServer::class, 'domain', 'domain');
+        return $this->belongsTo(Domain::class, 'domain', 'name');
     }
 
     public function getActivitylogOptions(): LogOptions
