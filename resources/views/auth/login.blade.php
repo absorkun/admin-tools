@@ -1,20 +1,11 @@
 <x-layouts.app title="Login">
-    <div class="grid min-h-screen place-items-center px-6 py-12">
-        <div class="grid w-full max-w-7xl gap-8 lg:grid-cols-[1.05fr_.95fr]">
-            <section class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm shadow-sky-100/50">
-                <div>
-                    <p class="text-sm uppercase tracking-[0.24em] text-sky-600">Login</p>
-                    <h1 class="mt-4 text-4xl font-semibold tracking-tight text-slate-900">
-                        Masuk ke panel domain
-                    </h1>
-                    <p class="mt-4 max-w-xl text-sm leading-7 text-slate-600">
-                        Login page simpel. Fokus ke akses internal, bukan visual berlebihan.
-                    </p>
-                </div>
-                <div class="mt-10 rounded-3xl bg-slate-50 p-5 text-sm text-slate-600">
-                    Gunakan kredensial tim yang valid.
-                </div>
-            </section>
+    <div class="grid min-h-screen place-items-center bg-stone-100 px-6 py-12">
+        <div class="w-full max-w-md">
+            <div class="mb-8 text-center">
+                <p class="text-sm uppercase tracking-[0.24em] text-sky-600">Domain</p>
+                <h1 class="mt-3 text-3xl font-semibold tracking-tight text-slate-900">Masuk Ke Admin Tools</h1>
+                <p class="mt-3 text-sm leading-6 text-slate-500">Gunakan kredensial yang valid untuk mengakses Admin Tools.</p>
+            </div>
 
             <section class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm shadow-sky-100/50">
                 <form method="POST" action="{{ route('login.store') }}" class="space-y-5">
@@ -44,9 +35,6 @@
                             class="w-full rounded-2xl border px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-sky-300 @error('password') border-rose-300 bg-rose-50 @else border-slate-200 bg-slate-50 @enderror"
                             placeholder="••••••••"
                         >
-                        {{-- @error('password')
-                            <p class="mt-2 text-sm text-rose-600">{{ $message }}</p>
-                        @enderror --}}
                     </div>
                     <div class="flex items-center justify-between text-sm text-slate-500">
                         <label class="flex items-center gap-2">
