@@ -57,7 +57,7 @@
 
                         <div class="divide-y divide-slate-200">
                             @forelse ($domains as $domain)
-                                <article class="grid grid-cols-12 gap-4 px-5 py-4 text-sm">
+                                <article class="grid grid-cols-12 gap-4 px-5 py-4 text-sm items-start">
                                     <div class="col-span-12 md:col-span-4 min-w-0">
                                         <a href="{{ route('domain.show', $domain->id) }}" class="block truncate font-medium text-sky-700 hover:text-sky-500 hover:underline" title="{{ $domain->name . $domain->zone }}">{{ $domain->name . $domain->zone }}</a>
                                     </div>
@@ -79,8 +79,8 @@
                                             <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">{{ ucfirst($domain->status) }}</span>
                                         @endif
                                     </div>
-                                    <div class="col-span-6 md:col-span-2 flex flex-wrap gap-1">
-                                        <a href="{{ route('domain.show', $domain->id) }}" class="inline-flex rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">
+                                    <div class="col-span-6 md:col-span-2">
+                                        <a href="{{ route('domain.show', $domain->id) }}" class="inline-flex items-center rounded-xl border border-sky-200 bg-white px-3 py-1.5 text-xs font-medium text-sky-700 transition hover:border-sky-300 hover:bg-sky-50">
                                             Detail
                                         </a>
                                     </div>
