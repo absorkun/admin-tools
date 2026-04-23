@@ -88,7 +88,7 @@
                         </div>
                     </x-filter-card>
 
-                    <x-table-card title="Daftar domain" subtitle="Hasil filter aktif.">
+                    <x-table-card title="Daftar domain" subtitle="Hasil filter aktif." :count="$domains->count()">
                         <div class="grid grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                             <div class="col-span-4">Domain</div>
                             <div class="col-span-4">Nameserver</div>

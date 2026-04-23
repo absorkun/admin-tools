@@ -49,7 +49,7 @@
 
         {{-- Tab: Expired --}}
         <div x-show="tab === 'expired'" x-cloak>
-            <x-table-card title="Domain Expired" subtitle="Domain dengan tanggal kedaluwarsa sudah lewat.">
+            <x-table-card title="Domain Expired" subtitle="Domain dengan tanggal kedaluwarsa sudah lewat." :count="$expiredDomains->count()">
                 <div class="grid grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                     <div class="col-span-4">Domain</div>
                     <div class="col-span-3">Instansi</div>
@@ -94,7 +94,7 @@
 
         {{-- Tab: Inactive --}}
         <div x-show="tab === 'inactive'" x-cloak>
-            <x-table-card title="Domain Tidak Aktif" subtitle="Domain dengan status selain aktif.">
+            <x-table-card title="Domain Tidak Aktif" subtitle="Domain dengan status selain aktif." :count="$inactiveDomains->count()">
                 <div class="grid grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                     <div class="col-span-4">Domain</div>
                     <div class="col-span-3">Instansi</div>
