@@ -22,6 +22,7 @@ class DomainController extends Controller
         $search = $request->string('search')->toString();
         $status = $request->string('status', 'active')->toString();
         $zone = $request->string('zone')->toString();
+        $ns = $request->string('ns')->toString();
         $limit = (int) $request->integer('limit', 20);
         $limit = in_array($limit, [10, 20, 50, 100], true) ? $limit : 20;
 
@@ -30,7 +31,7 @@ class DomainController extends Controller
         $districtId = $request->integer('district_id') ?: null;
         $villageId = $request->integer('village_id') ?: null;
 
-        $domains = $this->baseQuery($search, $status, $zone, $provinceId, $cityId, $districtId, $villageId)
+        $domains = $this->baseQuery($search, $status, $zone, $ns, $provinceId, $cityId, $districtId, $villageId)
             ->orderby('created_at')
             ->limit($limit)
             ->get();
@@ -45,6 +46,7 @@ class DomainController extends Controller
             'search' => $search,
             'status' => $status,
             'zone' => $zone,
+            'ns' => $ns,
             'limit' => $limit,
             'provinces' => $provinces,
             'cities' => $cities,
@@ -79,12 +81,13 @@ class DomainController extends Controller
         $search = $request->string('search')->toString();
         $status = $request->string('status')->toString();
         $zone = $request->string('zone')->toString();
+        $ns = $request->string('ns')->toString();
         $provinceId = $request->integer('province_id') ?: null;
         $cityId = $request->integer('city_id') ?: null;
         $districtId = $request->integer('district_id') ?: null;
         $villageId = $request->integer('village_id') ?: null;
 
-        $domains = $this->baseQuery($search, $status, $zone, $provinceId, $cityId, $districtId, $villageId)->orderby('created_at')->get();
+        $domains = $this->baseQuery($search, $status, $zone, $ns, $provinceId, $cityId, $districtId, $villageId)->orderby('created_at')->get();
 
         $fileName = 'domains-'.now()->format('Y-m-d-H-i-s');
 
@@ -125,7 +128,7 @@ class DomainController extends Controller
         return response()->json($domains);
     }
 
-    private function baseQuery(string $search, string $status = '', string $zone = '', ?int $provinceId = null, ?int $cityId = null, ?int $districtId = null, ?int $villageId = null)
+    private function baseQuery(string $search, string $status = '', string $zone = '', string $ns = '', ?int $provinceId = null, ?int $cityId = null, ?int $districtId = null, ?int $villageId = null)
     {
         return Domain::query()
             ->select([
@@ -154,6 +157,20 @@ class DomainController extends Controller
             })
             ->when($zone !== '', function ($query) use ($zone): void {
                 $query->where('zone', $zone);
+            })
+            ->when($ns === 'active', function ($query): void {
+                $query->whereNotNull('domain_name_server')
+                    ->where('domain_name_server', '!=', 'null')
+                    ->where('domain_name_server', '!=', '[]')
+                    ->where('domain_name_server', 'not like', '%ns-expired.domain.go.id%');
+            })
+            ->when($ns === 'inactive', function ($query): void {
+                $query->where(function ($q): void {
+                    $q->whereNull('domain_name_server')
+                        ->orWhere('domain_name_server', 'null')
+                        ->orWhere('domain_name_server', '[]')
+                        ->orWhere('domain_name_server', 'like', '%ns-expired.domain.go.id%');
+                });
             })
             ->when($provinceId !== null, function ($query) use ($provinceId): void {
                 $query->where('province_id', $provinceId);

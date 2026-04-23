@@ -15,6 +15,15 @@
                         </div>
 
                         <div>
+                            <label for="ns" class="mb-2 block text-sm font-medium text-slate-700">Nameserver</label>
+                            <select id="ns" name="ns" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                                <option value="">Semua</option>
+                                <option value="active" @selected(($ns ?? '') === 'active')>NS Aktif</option>
+                                <option value="inactive" @selected(($ns ?? '') === 'inactive')>NS Tidak Aktif</option>
+                            </select>
+                        </div>
+
+                        <div>
                             <label for="status" class="mb-2 block text-sm font-medium text-slate-700">Status</label>
                             <select id="status" name="status" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="">Semua</option>
