@@ -19,17 +19,17 @@
 
                         <div>
                             <label for="date_from" class="mb-2 block text-sm font-medium text-slate-700">Dari Tanggal</label>
-                            <input id="date_from" name="date_from" value="{{ $dateFrom }}" type="date" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <input id="date_from" name="date_from" value="{{ $dateFrom }}" type="date" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                         </div>
 
                         <div>
                             <label for="date_to" class="mb-2 block text-sm font-medium text-slate-700">Sampai Tanggal</label>
-                            <input id="date_to" name="date_to" value="{{ $dateTo }}" type="date" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <input id="date_to" name="date_to" value="{{ $dateTo }}" type="date" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                         </div>
 
                         <div>
                             <label for="status" class="mb-2 block text-sm font-medium text-slate-700">Status</label>
-                            <select id="status" name="status" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="status" name="status" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="">Semua</option>
                                 <option value="Diproses" @selected($status === 'Diproses')>Proses</option>
                                 <option value="Selesai" @selected($status === 'Selesai')>Selesai</option>
@@ -38,7 +38,7 @@
 
                         <div>
                             <label for="limit" class="mb-2 block text-sm font-medium text-slate-700">Limit</label>
-                            <select id="limit" name="limit" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="limit" name="limit" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="10" @selected($limit === 10)>10</option>
                                 <option value="20" @selected($limit === 20)>20</option>
                                 <option value="50" @selected($limit === 50)>50</option>
@@ -48,7 +48,7 @@
 
                         <div class="flex flex-wrap items-center gap-3 pt-2 md:col-span-2 xl:col-span-3">
                             <button type="submit" class="rounded-2xl bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-400">
-                                Apply filter
+                                Cari
                             </button>
                             <a href="{{ route('helpdesk-log.index') }}" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
                                 Reset
@@ -56,6 +56,38 @@
                             <a href="{{ route('helpdesk-log.export', request()->query()) }}" class="rounded-2xl border border-sky-200 bg-sky-50 px-5 py-3 text-sm font-medium text-sky-800 transition hover:bg-sky-100">
                                 Download CSV
                             </a>
+                            <div x-data="{ importOpen: false }">
+                                <button @click="importOpen = true" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
+                                    Import CSV
+                                </button>
+
+                                {{-- Import Modal --}}
+                                <div x-show="importOpen" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" @click.self="importOpen = false">
+                                    <div class="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-lg">
+                                        <h2 class="text-lg font-semibold text-slate-900">Import Helpdesk dari CSV</h2>
+                                        <p class="mt-2 text-sm text-slate-500">Kolom yang dibutuhkan: <span class="font-medium">Tanggal, Domain, Pelapor, Kontak, Email, Jenis Layanan, Kanal, Deskripsi, Status, Catatan Tambahan</span>. Baris pertama harus header.</p>
+
+                                        <form method="POST" action="{{ route('helpdesk-log.import') }}" enctype="multipart/form-data" class="mt-6 space-y-4">
+                                            @csrf
+                                            <div>
+                                                <label class="mb-2 block text-sm font-medium text-slate-700">File CSV</label>
+                                                <input type="file" name="csv_file" accept=".csv,.txt" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition file:mr-3 file:rounded-xl file:border-0 file:bg-sky-50 file:px-3 file:py-1 file:text-xs file:font-medium file:text-sky-700">
+                                                @error('csv_file')
+                                                    <p class="mt-2 text-xs text-rose-600">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                            <div class="flex gap-3 pt-2">
+                                                <button type="submit" class="rounded-2xl bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-400">
+                                                    Upload & Import
+                                                </button>
+                                                <button type="button" @click="importOpen = false" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300">
+                                                    Batal
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </x-filter-card>
 

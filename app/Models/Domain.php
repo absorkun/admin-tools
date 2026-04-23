@@ -70,6 +70,26 @@ class Domain extends Model
         return $this->belongsTo(Registrant::class, 'registrant_id');
     }
 
+    public function province(): BelongsTo
+    {
+        return $this->belongsTo(Province::class, 'province_id');
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function village(): BelongsTo
+    {
+        return $this->belongsTo(Village::class, 'village_id');
+    }
+
     public function helpdeskLogs(): HasMany
     {
         return $this->hasMany(HelpdeskLog::class, 'domain', 'name');

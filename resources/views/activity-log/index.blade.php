@@ -2,7 +2,7 @@
                     <x-filter-card :action="route('activity-log.index')" class="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
                         <div>
                             <label for="subject_type" class="mb-2 block text-sm font-medium text-slate-700">Subject</label>
-                            <select id="subject_type" name="subject_type" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="subject_type" name="subject_type" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="">Semua</option>
                                 @foreach ($subjectTypes as $type)
                                     <option value="{{ $type }}" @selected($subjectType === $type)>{{ class_basename($type) }}</option>
@@ -12,7 +12,7 @@
 
                         <div>
                             <label for="limit" class="mb-2 block text-sm font-medium text-slate-700">Limit</label>
-                            <select id="limit" name="limit" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="limit" name="limit" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="10" @selected($limit === 10)>10</option>
                                 <option value="20" @selected($limit === 20)>20</option>
                                 <option value="50" @selected($limit === 50)>50</option>
@@ -21,9 +21,6 @@
                         </div>
 
                         <div class="flex items-end gap-3 pt-2 md:col-span-2">
-                            <button type="submit" class="rounded-2xl bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-400">
-                                Apply filter
-                            </button>
                             <a href="{{ route('activity-log.index') }}" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
                                 Reset
                             </a>

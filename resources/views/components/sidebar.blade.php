@@ -15,6 +15,9 @@
         <a href="{{ route('domain.index') }}" class="{{ $active === 'domain' ? 'bg-sky-50 text-sky-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }} flex items-center rounded-xl px-4 py-3 text-sm font-medium transition">
             Domains
         </a>
+        <a href="{{ route('featured-domain.index') }}" class="{{ $active === 'featured-domain' ? 'bg-sky-50 text-sky-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }} flex items-center rounded-xl px-4 py-3 text-sm font-medium transition">
+            Featured Domains
+        </a>
         <a href="{{ route('email-log-expired.index') }}" class="{{ $active === 'email-log-expired' ? 'bg-sky-50 text-sky-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }} flex items-center rounded-xl px-4 py-3 text-sm font-medium transition">
             Email Log
         </a>

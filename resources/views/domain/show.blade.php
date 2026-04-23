@@ -58,6 +58,22 @@
                                 <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Kode Pos</dt>
                                 <dd class="mt-1 text-sm text-slate-900">{{ $domain->postal_code ?? '-' }}</dd>
                             </div>
+                            <div class="px-6 py-4">
+                                <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Provinsi</dt>
+                                <dd class="mt-1 text-sm text-slate-900">{{ $domain->province?->name ?? '-' }}</dd>
+                            </div>
+                            <div class="px-6 py-4">
+                                <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Kabupaten/Kota</dt>
+                                <dd class="mt-1 text-sm text-slate-900">{{ $domain->city?->name ?? '-' }}</dd>
+                            </div>
+                            <div class="px-6 py-4">
+                                <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Kecamatan</dt>
+                                <dd class="mt-1 text-sm text-slate-900">{{ $domain->district?->name ?? '-' }}</dd>
+                            </div>
+                            <div class="px-6 py-4">
+                                <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Desa/Kelurahan</dt>
+                                <dd class="mt-1 text-sm text-slate-900">{{ $domain->village?->name ?? '-' }}</dd>
+                            </div>
 
                             {{-- Nameserver --}}
                             <div class="px-6 py-4">
@@ -75,7 +91,7 @@
 
                             {{-- Tanggal --}}
                             <div class="px-6 py-4">
-                                <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Terdaftar</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Tanggal Register</dt>
                                 <dd class="mt-1 text-sm text-slate-900">{{ $domain->registered_at?->format('d M Y') ?? '-' }}</dd>
                             </div>
                             <div class="px-6 py-4">

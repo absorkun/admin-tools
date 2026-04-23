@@ -7,7 +7,7 @@
 
                         <div>
                             <label for="zone" class="mb-2 block text-sm font-medium text-slate-700">Zone</label>
-                            <select id="zone" name="zone" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="zone" name="zone" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="">Semua</option>
                                 <option value=".go.id" @selected($zone === '.go.id')>.go.id</option>
                                 <option value=".desa.id" @selected($zone === '.desa.id')>.desa.id</option>
@@ -16,7 +16,7 @@
 
                         <div>
                             <label for="status" class="mb-2 block text-sm font-medium text-slate-700">Status</label>
-                            <select id="status" name="status" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="status" name="status" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="">Semua</option>
                                 @foreach (['active', 'suspend', 'cancelled', 'reject', 'draft', 'error', 'verifikasi dokumen', 'pending payment', 'verifikasi pembayaran'] as $s)
                                     <option value="{{ $s }}" @selected(($status ?? '') === $s)>{{ ucfirst($s) }}</option>
@@ -26,7 +26,7 @@
 
                         <div>
                             <label for="limit" class="mb-2 block text-sm font-medium text-slate-700">Limit</label>
-                            <select id="limit" name="limit" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="limit" name="limit" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 <option value="10" @selected($limit === 10)>10</option>
                                 <option value="20" @selected($limit === 20)>20</option>
                                 <option value="50" @selected($limit === 50)>50</option>
@@ -34,9 +34,50 @@
                             </select>
                         </div>
 
+                        {{-- Geo filters --}}
+                        <div>
+                            <label for="province_id" class="mb-2 block text-sm font-medium text-slate-700">Provinsi</label>
+                            <select id="province_id" name="province_id" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                                <option value="">Semua Provinsi</option>
+                                @foreach ($provinces as $province)
+                                    <option value="{{ $province->id }}" @selected($provinceId === $province->id)>{{ $province->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="city_id" class="mb-2 block text-sm font-medium text-slate-700">Kabupaten/Kota</label>
+                            <select id="city_id" name="city_id" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300" @disabled(! $provinceId)>
+                                <option value="">{{ $provinceId ? 'Semua Kab/Kota' : '— Pilih provinsi dulu —' }}</option>
+                                @foreach ($cities as $city)
+                                    <option value="{{ $city->id }}" @selected($cityId === $city->id)>{{ $city->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="district_id" class="mb-2 block text-sm font-medium text-slate-700">Kecamatan</label>
+                            <select id="district_id" name="district_id" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300" @disabled(! $cityId)>
+                                <option value="">{{ $cityId ? 'Semua Kecamatan' : '— Pilih kab/kota dulu —' }}</option>
+                                @foreach ($districts as $district)
+                                    <option value="{{ $district->id }}" @selected($districtId === $district->id)>{{ $district->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="village_id" class="mb-2 block text-sm font-medium text-slate-700">Desa/Kelurahan</label>
+                            <select id="village_id" name="village_id" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300" @disabled(! $districtId)>
+                                <option value="">{{ $districtId ? 'Semua Desa' : '— Pilih kecamatan dulu —' }}</option>
+                                @foreach ($villages as $village)
+                                    <option value="{{ $village->id }}" @selected($villageId === $village->id)>{{ $village->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="flex flex-wrap items-center gap-3 pt-2 md:col-span-2 xl:col-span-4">
                             <button type="submit" class="rounded-2xl bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-400">
-                                Terapkan
+                                Cari
                             </button>
                             <a href="{{ route('domain.index') }}" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
                                 Reset

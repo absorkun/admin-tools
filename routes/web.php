@@ -4,6 +4,7 @@ use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\EmailLogExpiredController;
+use App\Http\Controllers\FeaturedDomainController;
 use App\Http\Controllers\HelpdeskLogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +17,7 @@ Route::post('/login', [AuthController::class, 'store'])->name('login.store');
 Route::middleware(['auth', 'role:super_admin|pandi|helpdesk'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/domain', [DomainController::class, 'index'])->name('domain.index');
+    Route::get('/featured-domains', [FeaturedDomainController::class, 'index'])->name('featured-domain.index');
     Route::get('/domain/export/csv', [DomainController::class, 'export'])->name('domain.export');
     Route::get('/domain/search', [DomainController::class, 'search'])->name('domain.search');
     Route::get('/domain/{id}', [DomainController::class, 'show'])->name('domain.show');
@@ -25,6 +27,7 @@ Route::middleware(['auth', 'role:super_admin|pandi|helpdesk'])->group(function (
     Route::get('/helpdesk-log/create', [HelpdeskLogController::class, 'create'])->name('helpdesk-log.create');
     Route::post('/helpdesk-log', [HelpdeskLogController::class, 'store'])->name('helpdesk-log.store');
     Route::get('/helpdesk-log/export/csv', [HelpdeskLogController::class, 'export'])->name('helpdesk-log.export');
+    Route::post('/helpdesk-log/import/csv', [HelpdeskLogController::class, 'importCsv'])->name('helpdesk-log.import');
     Route::get('/helpdesk-log/{id}/edit', [HelpdeskLogController::class, 'edit'])->name('helpdesk-log.edit');
     Route::put('/helpdesk-log/{id}', [HelpdeskLogController::class, 'update'])->name('helpdesk-log.update');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('users_id');
             $table->timestamps();
 
+            $table->unique(['domain', 'created_at', 'pelapor_phone']);
             $table->index('domain');
             $table->index('status');
             $table->index('created_at');

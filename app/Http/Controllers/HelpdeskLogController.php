@@ -167,4 +167,84 @@ class HelpdeskLogController extends Controller
             ];
         })->all());
     }
+
+    public function importCsv(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:2048'],
+        ]);
+
+        $file = $request->file('csv_file');
+        $handle = fopen($file->getRealPath(), 'r');
+
+        $header = fgetcsv($handle);
+        $header = array_map('trim', $header);
+
+        $expectedColumns = ['Tanggal', 'Domain', 'Pelapor', 'Kontak', 'Email', 'Jenis Layanan', 'Kanal', 'Deskripsi', 'Status', 'Catatan Tambahan'];
+        $missing = array_diff($expectedColumns, $header);
+
+        if (! empty($missing)) {
+            fclose($handle);
+
+            return back()->withErrors(['csv_file' => 'Kolom tidak sesuai. Kolom yang dibutuhkan: '.implode(', ', $expectedColumns)]);
+        }
+
+        $indexed = array_flip($header);
+        $imported = 0;
+        $errors = [];
+        $row = 2;
+
+        while (($line = fgetcsv($handle)) !== false) {
+            $domain = trim($line[$indexed['Domain']] ?? '');
+            $status = trim($line[$indexed['Status']] ?? '');
+            $jenis = trim($line[$indexed['Jenis Layanan']] ?? '');
+            $kanal = trim($line[$indexed['Kanal']] ?? '');
+            $phone = trim($line[$indexed['Kontak']] ?? '-');
+            $tanggal = trim($line[$indexed['Tanggal']] ?? '') ?: now()->toDateTimeString();
+
+            if ($domain === '') {
+                $errors[] = "Baris {$row}: kolom Domain kosong.";
+                $row++;
+
+                continue;
+            }
+
+            if (! in_array($status, HelpdeskLog::STATUSES, true)) {
+                $errors[] = "Baris {$row}: status '{$status}' tidak valid.";
+                $row++;
+
+                continue;
+            }
+
+            HelpdeskLog::withoutTimestamps(function () use ($domain, $phone, $tanggal, $indexed, $line, $jenis, $kanal, $status): void {
+                HelpdeskLog::query()->updateOrCreate(
+                    ['domain' => $domain, 'pelapor_phone' => $phone, 'created_at' => $tanggal],
+                    [
+                        'pelapor_nama' => trim($line[$indexed['Pelapor']] ?? '-'),
+                        'pelapor_phone' => $phone,
+                        'pelapor_email' => trim($line[$indexed['Email']] ?? '') ?: null,
+                        'jenis_layanan' => $jenis !== '' ? $jenis : 'Informasi',
+                        'kanal' => $kanal !== '' ? $kanal : 'Lainnya',
+                        'deskripsi' => trim($line[$indexed['Deskripsi']] ?? '-'),
+                        'status' => $status,
+                        'catatan_tambahan' => trim($line[$indexed['Catatan Tambahan']] ?? '') ?: null,
+                        'users_id' => auth()->id(),
+                        'created_at' => $tanggal,
+                    ]
+                );
+            });
+
+            $imported++;
+            $row++;
+        }
+
+        fclose($handle);
+
+        $message = "{$imported} baris berhasil diimport.";
+        if (! empty($errors)) {
+            $message .= ' Gagal: '.implode(' ', $errors);
+        }
+
+        return redirect()->route('helpdesk-log.index')->with('status', $message);
+    }
 }

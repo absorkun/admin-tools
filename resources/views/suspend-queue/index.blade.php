@@ -13,7 +13,7 @@
 
                         <div>
                             <label for="limit" class="mb-2 block text-sm font-medium text-slate-700">Limit</label>
-                            <select id="limit" name="limit" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
+                            <select id="limit" name="limit" onchange="this.form.submit()" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-sky-300">
                                 @foreach ([10, 20, 50, 100] as $option)
                                     <option value="{{ $option }}" @selected($limit === $option)>{{ $option }}</option>
                                 @endforeach
@@ -22,7 +22,7 @@
 
                         <div class="flex flex-wrap items-center gap-3 pt-2 md:col-span-2">
                             <button type="submit" class="rounded-2xl bg-sky-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-sky-400">
-                                Apply filter
+                                Cari
                             </button>
                             <a href="{{ route('suspend-queue.index') }}" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:text-sky-700">
                                 Reset
